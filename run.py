@@ -1,10 +1,15 @@
 from pyedhrec import EDHRec
+from flask import Flask, render_template, redirect, url_for
 import csv
 
+app = Flask(__name__)
 edhrec = EDHRec()
-archCSVFile = "data.csv"
 
-def high_syn(cardName):
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+def high_syn(cardName, collection):
     print("")
     cards = edhrec.get_high_synergy_cards(cardName)["High Synergy Cards"]
     print("You own the following high synergy cards: \n")
@@ -12,7 +17,7 @@ def high_syn(cardName):
         if card["name"] in collection:
             print(card["name"] + "\n" + card["label"] + "\n")
 
-def top(cardName):
+def top(cardName, collection):
     print("")
     cards = edhrec.get_top_cards(cardName)["Top Cards"]
     print("You own the following top cards: \n")
@@ -20,54 +25,40 @@ def top(cardName):
         if card["name"] in collection:
             print(card["name"] + "\n" + card["label"] + "\n")
 
-collection = []
+def console():
 
-with open(archCSVFile, 'r') as csvFile:
-    reader = csv.reader(csvFile)
-    for row in reader:
-        collection.append(row[0])
+    archCSVFile = "data.csv"
 
-cardName = input("\nPlease input a card name: ")
+    collection = []
 
-creatures = edhrec.get_top_creatures(cardName)
+    with open(archCSVFile, 'r') as csvFile:
+        reader = csv.reader(csvFile)
+        for row in reader:
+            collection.append(row[0])
 
-instants = edhrec.get_top_instants(cardName)
+    cardName = input("\nPlease input a card name: ")
 
-sorceries = edhrec.get_top_sorceries(cardName)
+    creatures = edhrec.get_top_creatures(cardName)
 
-enchant = edhrec.get_top_enchantments(cardName)
+    instants = edhrec.get_top_instants(cardName)
 
-mana_art = edhrec.get_top_mana_artifacts(cardName)
+    sorceries = edhrec.get_top_sorceries(cardName)
 
-battles = edhrec.get_top_battles(cardName)
+    enchant = edhrec.get_top_enchantments(cardName)
 
-planes = edhrec.get_top_planeswalkers(cardName)
+    mana_art = edhrec.get_top_mana_artifacts(cardName)
 
-util = edhrec.get_top_utility_lands(cardName)
+    battles = edhrec.get_top_battles(cardName)
 
-lands = edhrec.get_top_lands(cardName)
+    planes = edhrec.get_top_planeswalkers(cardName)
 
-high_syn(cardName)
-top(cardName)
+    util = edhrec.get_top_utility_lands(cardName)
 
-#print()
-#print(top)
-#print()
-#print(creatures)
-#print()
-#print(instants)
-#print()
-#print(sorceries)
-#print()
-#print(enchant)
-#print()
-#print(mana_art)
-#print()
-#print(battles)
-#print()
-#print(planes)
-#print()
-#print(util)
-#print()
-#print(lands)
+    lands = edhrec.get_top_lands(cardName)
 
+    high_syn(cardName, collection)
+    top(cardName, collection)
+
+if __name__ == "__main__":
+    app.run(debug=False)
+    console() #Will only run if server is closed with CTRL-C first
