@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ArchEDH - Commander Suggestion</title>
+    </head>
+    <body>
+        <script>
+            async function search() {
+                var commander = document.getElementById("cardName").value;
+                let response = await fetch("/commander/" + commander);
+                let data = await response.json();
+                if(data.error) {
+                    alert("Invalid Card");
+                }
+                else {
+                    console.log(data);
+                    document.getElementById("cardPhoto").src = data.image_uri;
+                } 
+            }
+        </script>
+        <h2>Commander Suggestion</h2>
+        <label for="cardName">Commander: </label>
+        <input type="text" name="cardName" id="cardName">
+        <input type="button" value="Search" onclick="search()">
+        <br>
+        <br>
+        <br>
+        <img id="cardPhoto">
+    </body>
+</html>

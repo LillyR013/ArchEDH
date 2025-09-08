@@ -2,12 +2,26 @@ from pyedhrec import EDHRec
 from flask import Flask, render_template, redirect, url_for
 import csv
 
+from requests import HTTPError
+
 app = Flask(__name__)
 edhrec = EDHRec()
 
 @app.route("/")
 def home():
     return render_template("index.html")
+
+@app.route("/commanderSuggestion")
+def suggest():
+    return render_template("commanderSuggestion.html")
+
+@app.route("/commander/<commander>")
+def search(commander):
+    try:
+        cardData = edhrec.get_card_details(commander)
+        return cardData
+    except HTTPError:
+        return {'error': 'Invalid Card'}
 
 def high_syn(cardName, collection):
     print("")
@@ -61,4 +75,3 @@ def console():
 
 if __name__ == "__main__":
     app.run(debug=False)
-    console() #Will only run if server is closed with CTRL-C first
