@@ -1,30 +1,28 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <title>ArchEDH - Commander Suggestion</title>
+        <script src="{{ url_for('static', filename='suggest.js') }}"></script>
     </head>
     <body>
-        <script>
-            async function search() {
-                var commander = document.getElementById("cardName").value;
-                let response = await fetch("/commander/" + commander);
-                let data = await response.json();
-                if(data.error) {
-                    alert("Invalid Card");
-                }
-                else {
-                    console.log(data);
-                    document.getElementById("cardPhoto").src = data.image_uri;
-                } 
-            }
-        </script>
         <h2>Commander Suggestion</h2>
         <label for="cardName">Commander: </label>
         <input type="text" name="cardName" id="cardName">
+        <br>
+        <label for="collection">Collection Data (.csv file): </label>
+        <input type="file" id="collection" accept=".csv">
+        <br>
         <input type="button" value="Search" onclick="search()">
         <br>
         <br>
         <br>
         <img id="cardPhoto">
+        <h2>Top Cards:</h2>
+        <div id="top">
+        </div>
+        <h2>Top Creatures:</h2>
+        <div id="creatures">
+        </div>
     </body>
 </html>
